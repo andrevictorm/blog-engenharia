@@ -38,6 +38,14 @@ details p{margin:.5em 0 0;color:var(--muted)}
 .cta{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff}
 .cta h2{color:#fff}
 footer{padding:20px 0 90px;font-size:.9rem;color:var(--muted)}
+figure{margin:0}
+.who{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
+.who img,.field img{width:100%;height:auto;border-radius:12px;display:block}
+@media(min-width:640px){.who{grid-template-columns:240px 1fr}.field{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin:.7em 0}
+.steps li:before{content:counter(s);flex:0 0 34px;height:34px;border-radius:50%;background:var(--gold);color:#0a2147;font-weight:800;display:grid;place-items:center}
 </style>
 </head>
 <body>
@@ -51,6 +59,17 @@ footer{padding:20px 0 90px;font-size:.9rem;color:var(--muted)}
 </div>
 </header>
 <main class="wrap">
+
+<section>
+<h2>Quem assina o laudo</h2>
+<div class="who">
+<figure><img src="../../img/palestra.jpg" alt="Eng. André Victor falando ao microfone em uma palestra" width="240" height="257" loading="lazy"><figcaption>Em palestra técnica.</figcaption></figure>
+<div>
+<p><b>Eng. André Victor Moreira Costa</b>, engenheiro de produção e de segurança do trabalho, CREA-RJ 2014128139. Atuo com laudos, vistorias, perícia e segurança do trabalho, e já participei da implantação de sistemas de gestão ISO em empresas.</p>
+<p>Você fala diretamente comigo, do orçamento à entrega do laudo.</p>
+</div>
+</div>
+</section>
 
 <section>
 <h2>O que é o laudo de vistoria predial</h2>
@@ -80,8 +99,19 @@ footer{padding:20px 0 90px;font-size:.9rem;color:var(--muted)}
 </section>
 
 <section>
+<h2>Em campo: vistoria e medição</h2>
+<div class="field">
+<figure><img src="../../img/encosta-vistoria.jpg" alt="Talude de terra vermelha com sinais de erosão, durante vistoria e medição em encosta" width="600" height="740" loading="lazy"><figcaption>Vistoria e medição em uma encosta (trabalho voluntário).</figcaption></figure>
+<div>
+<p>Cada vistoria começa no local: observar, medir, fotografar e registrar o que está acontecendo, para só então concluir. Isso vale para um prédio, uma escola ou uma encosta.</p>
+<p class="note">Cada tipo de edificação ou terreno pode exigir profissional ou estudo específico. Se o seu caso fugir da minha atribuição, eu aviso antes de começar.</p>
+</div>
+</div>
+</section>
+
+<section>
 <h2>Como funciona</h2>
-<ol>
+<ol class="steps">
 <li><b>Você conta o caso</b> pelo WhatsApp: endereço, tipo de imóvel, o problema e prazos.</li>
 <li><b>Recebe o orçamento</b> em até 24 horas úteis, com escopo e taxa do CREA.</li>
 <li><b>Vistoria no local</b>, agendada com você.</li>
