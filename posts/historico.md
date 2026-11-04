@@ -5,3 +5,4 @@
 - 2026-11-03 17:47 — NR-35 treinamento presencial e escadas fixas (republicado no horário agendado) — mídia 17976865140156162
 - 2026-11-03 21:00 — Checklist: 5 perguntas antes de contratar um laudo (CREA, ART, vistoria, escopo, método) — mídia 18132743956839245
 - 2026-11-04 11:44 — Quiz NR-3: embargo x interdição e grave e iminente risco — mídia 18063564278802604
+- 2026-11-04 21:17 — Quiz: nova NR-10 (Portaria MTE 737/2026; prontuário, habilitação, análise de risco, vistoria) — mídia 18110070206217398
