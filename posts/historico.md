@@ -8,3 +8,4 @@
 - 2026-11-04 21:17 — Quiz: nova NR-10 (Portaria MTE 737/2026; prontuário, habilitação, análise de risco, vistoria) — mídia 18110070206217398
 - 2026-11-05 12:02 — Caso: queda de andaime, erros comuns e checklist (NR-18/NR-35) — mídia 17955475941302405
 - 2026-11-05 21:24 — Mito x verdade NR-12 (proteção, parada de emergência, bloqueio na manutenção, treinamento) — mídia 18131424650481539
+- 2026-11-06 09:27 — Erro comum: acessibilidade (NBR 9050 x NBR 16537, rampa, rota contínua) — mídia 17991181950084478
