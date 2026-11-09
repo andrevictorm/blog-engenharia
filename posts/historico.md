@@ -10,3 +10,4 @@
 - 2026-11-05 21:24 — Mito x verdade NR-12 (proteção, parada de emergência, bloqueio na manutenção, treinamento) — mídia 18131424650481539
 - 2026-11-06 09:27 — Erro comum: acessibilidade (NBR 9050 x NBR 16537, rampa, rota contínua) — mídia 17991181950084478
 - 2026-11-06 21:00 — Mito x verdade: insalubridade x periculosidade, cumulação (CLT art. 193 §2º, TST) — mídia 17954520627305812
+- 2026-11-09 11:35 — Mito x verdade: AEP da NR-17 (ergonomia, GRO/NR-1, MTE perguntas e respostas maio/2026) — mídia 18382107043240693
