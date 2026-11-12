@@ -13,3 +13,5 @@
 - 2026-11-09 11:35 — Mito x verdade: AEP da NR-17 (ergonomia, GRO/NR-1, MTE perguntas e respostas maio/2026) — mídia 18382107043240693
 
 ## Stories (divulgação do blog) — 1 por dia, 18:00, imagens em posts/stories/AAAA-MM-DD/story.jpg
+
+- 2026-11-11 — story publicado, ID 18439086310149786
