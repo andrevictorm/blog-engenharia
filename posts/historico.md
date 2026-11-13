@@ -15,3 +15,4 @@
 ## Stories (divulgação do blog) — 1 por dia, 18:00, imagens em posts/stories/AAAA-MM-DD/story.jpg
 
 - 2026-11-11 — story publicado, ID 18439086310149786
+- 2026-11-12 — story publicado, ID 18383967736232149 (obs.: blogspot não verificável nesta sessão, domínio bloqueado)
