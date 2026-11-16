@@ -120,9 +120,19 @@ CAPAS = {
  "insal-obrig": (i_insobrig, "Laudo de insalubridade", "É OBRIGATÓRIO? O QUE DIZ A CLT"),
  "quem-assina": (i_assina, "Quem pode assinar o PGR?", "O QUE DIZ O MINISTÉRIO DO TRABALHO"),
 }
-for k, (fn, t, sub) in CAPAS.items():
-    img, d = base(); fn(d)
-    d.text((W // 2 * S, 600 * S), t, font=font("Caladea-Bold.ttf", 64 * S), fill=WHITE, anchor="mm")
-    d.text((W // 2 * S, 675 * S), sub, font=font("Carlito-Bold.ttf", 30 * S), fill=GOLD, anchor="mm")
-    img.resize((W, H), Image.LANCZOS).save(f"blog/capa-{k}.jpg", "JPEG", quality=92)
-print(len(CAPAS))
+ICONS = {k: v[0] for k, v in CAPAS.items()}
+
+def render_icon(key):
+    """Ícone recortado (RGBA, ~ 400x380 px) para usar em slides do Instagram."""
+    lay = Image.new("RGBA", (W * S, H * S), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    ICONS[key](d)
+    lay = lay.crop(lay.getbbox())
+    return lay.resize((lay.width // S, lay.height // S), Image.LANCZOS)
+
+if __name__ == "__main__":
+    for k, (fn, t, sub) in CAPAS.items():
+        img, d = base(); fn(d)
+        d.text((W // 2 * S, 600 * S), t, font=font("Caladea-Bold.ttf", 64 * S), fill=WHITE, anchor="mm")
+        d.text((W // 2 * S, 675 * S), sub, font=font("Carlito-Bold.ttf", 30 * S), fill=GOLD, anchor="mm")
+        img.resize((W, H), Image.LANCZOS).save(f"blog/capa-{k}.jpg", "JPEG", quality=92)
+    print(len(CAPAS))

@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Gera slides 1080x1350 (JPEG) no estilo do perfil @engperitoandre.
 Uso: python arte.py conteudo.json pasta_saida
-conteudo.json: {"slides":[{"kicker":"...", "titulo":"...", "texto":"...", "cta":false}, ...]}
+conteudo.json: {"slides":[{"kicker":"...", "titulo":"...", "texto":"...", "cta":false, "icone":"nr12"}, ...]}
+"icone" (opcional, usar no slide 1/capa): chave de rotina/capas_blog.py ICONS
+(aep, insal-peri, acess-erros, nr12, nr18, nr10, nr3, laudo5, rampa, nr35, pgr, insal-obrig, quem-assina).
+Para tema novo, acrescente um icone em capas_blog.py.
 O ultimo slide deve ter "cta": true (mostra o WhatsApp)."""
 import json, sys, os, textwrap
 from PIL import Image, ImageDraw, ImageFont
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from capas_blog import render_icon
 W, H = 1080, 1350
 NAVY, TEAL, GOLD, WHITE = (10, 33, 71), (14, 78, 92), (224, 165, 38), (245, 247, 250)
 F = "/usr/share/fonts/truetype/crosextra/"
@@ -39,6 +44,11 @@ def slide(s, n, total, path):
     fb = font("Carlito-Regular.ttf", 46) if os.path.exists(F + "Carlito-Regular.ttf") else font("Carlito-Bold.ttf", 46)
     for l in wrap(d, s.get("texto", ""), fb, W - 160):
         d.text((80, y), l, font=fb, fill=(220, 228, 238)); y += 66
+    if s.get("icone"):
+        ic = render_icon(s["icone"]); top, bot = y + 20, H - 150
+        k = min((W - 240) / ic.width, max(120, bot - top) / ic.height, 1.6)
+        ic = ic.resize((int(ic.width * k), int(ic.height * k)), Image.LANCZOS)
+        img.paste(ic, ((W - ic.width) // 2, top + (bot - top - ic.height) // 2), ic)
     if s.get("cta"):
         d.rounded_rectangle([80, H - 330, W - 80, H - 190], 36, fill=(34, 197, 94))
         d.text((W // 2, H - 260), "Chame no WhatsApp: 21 99419-2878", font=font("Carlito-Bold.ttf", 50), fill=(8, 40, 20), anchor="mm")
