@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Gera stories 1080x1920 (JPEG) que levam o público do Instagram ao blog.
 Uso: python story.py stories.json pasta_saida
+"icone" (opcional em cada post): chave de capas_blog.py ICONS, desenhada ao lado do titulo.
 stories.json: [{"data":"2026-11-11","posts":[{"titulo":"...","tag":"NR-1 · PGR"}, ...]}, ...]"""
 import json, sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from capas_blog import render_icon
 from PIL import Image, ImageDraw, ImageFont
 W, H = 1080, 1920
 NAVY, TEAL, GOLD, WHITE = (10, 33, 71), (14, 78, 92), (224, 165, 38), (245, 247, 250)
@@ -25,11 +28,20 @@ def story(posts, path):
     y = 260  # zona segura: topo livre
     d.rectangle([80, y, 200, y + 8], fill=GOLD); y += 40
     d.text((80, y), "NOVO NO BLOG", font=font("Carlito-Bold.ttf", 56), fill=GOLD); y += 110
-    ft = font("Caladea-Bold.ttf", 76)
     for p in posts:
+        ic = render_icon(p["icone"]) if p.get("icone") else None
+        ft = font("Caladea-Bold.ttf", 66 if ic else 76); lh = 80 if ic else 92
+        tw = W - 160 - (290 if ic else 0)
+        y0 = y
         d.text((80, y), p["tag"].upper(), font=font("Carlito-Bold.ttf", 36), fill=GOLD); y += 54
-        for l in wrap(d, p["titulo"], ft, W - 160):
-            d.text((80, y), l, font=ft, fill=WHITE); y += 92
+        for l in wrap(d, p["titulo"], ft, tw):
+            d.text((80, y), l, font=ft, fill=WHITE); y += lh
+        if ic:
+            k = min(250 / ic.width, 250 / ic.height)
+            ic = ic.resize((int(ic.width * k), int(ic.height * k)), Image.LANCZOS)
+            cy = (y0 + y) // 2
+            img.paste(ic, (W - 80 - ic.width, cy - ic.height // 2), ic)
+            y = max(y, y0 + ic.height + 40) if ic.height + 40 > y - y0 else y
         y += 60
     fb = font("Carlito-Bold.ttf", 52)
     by = H - 560

@@ -27,3 +27,6 @@ Serviços: laudos e vistorias, perícia, segurança do trabalho (PGR/GRO, NRs), 
 - Nunca imprima nem grave o token em arquivo, log, commit ou mensagem.
 - Não responda comentários, não mande DMs e não altere o perfil. Só publica carrosséis.
 - Se algo falhar duas vezes, pare e avise em vez de insistir.
+
+## Stories do blog
+Os stories (1080x1920) saem de `rotina/story.py` a partir de `posts/stories.json`. **Cada post do story deve ter `"icone"`** (chave de `rotina/capas_blog.py`), desenhado ao lado do título. Capa só com texto é genérica e o André pediu ícones nos stories futuros.
