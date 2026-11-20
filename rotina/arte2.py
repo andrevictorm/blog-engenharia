@@ -50,6 +50,27 @@ def mascote(size, olhos="ok"):
     d.ellipse(B(92, 180, 112, 196), fill=(244, 160, 150)); d.ellipse(B(188, 180, 208, 196), fill=(244, 160, 150))
     return im.resize((size, size), Image.LANCZOS)
 
+MASC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "mascote")
+def pose_img(nome, maxw, maxh):
+    im = Image.open(os.path.join(MASC, nome + ".png")).convert("RGBA")
+    k = min(maxw / im.width, maxh / im.height)
+    return im.resize((max(1, int(im.width * k)), max(1, int(im.height * k))), Image.LANCZOS)
+SEGURANCA = ("nr3", "nr10", "nr12", "nr18", "nr35", "pgr")
+def pose_padrao(s, n, total):
+    if s.get("pose"): return s["pose"]
+    sl = (s.get("selo") or [""])[0]; k = s["kicker"].lower()
+    if s.get("cta"): return "fone"
+    if k.startswith("sua vez"): return "cafe"
+    if sl == "MITO": return "duvida"
+    if sl == "ERRO COMUM": return "cansado"
+    if sl == "CHECKLIST" or k.startswith("checklist"): return "prancheta"
+    if sl == "VERDADE": return "vitoria"
+    if sl == "ATENÇÃO" or k.startswith("atenção"): return "duvida"
+    if k.startswith("pergunta"): return "duvida"
+    if k.startswith("resultado"): return "riso"
+    if n == 1: return "obra" if s.get("icone") in SEGURANCA else "centro2"
+    return ["centro2", "obra", "prancheta"][n % 3] if s.get("icone") in SEGURANCA else ["centro2", "riso", "grafico"][n % 3]
+
 def wrap(d, text, f, maxw):
     lines, cur = [], ""
     for w in text.split():
@@ -100,35 +121,61 @@ def slide(s, n, total, path):
         yy = y + 20
         for l in lines: d.text((120, yy), l, font=fb, fill=(232, 238, 246)); yy += 62
         y += h
-    zbot = (H - 360) if s.get("cta") else (H - 150); ztop = y + 30; zh = zbot - ztop
-    if zh >= 190:
-        masc = zh >= 330
-        dia = int(min(zh, 460 if masc else 520, W - 160))
-        cx = 80 + dia // 2 if masc else W // 2
-        if s.get("icone") and not s.get("cta"):
-            ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); od = ImageDraw.Draw(ov)
-            cy = ztop + zh // 2
-            od.ellipse([cx - dia // 2, cy - dia // 2, cx + dia // 2, cy + dia // 2], fill=(255, 255, 255, 20), outline=(224, 165, 38, 140), width=4)
-            img = Image.alpha_composite(img, ov)
-            ic = render_icon(s["icone"]); k = min(dia * 0.74 / ic.width, dia * 0.74 / ic.height)
-            ic = ic.resize((int(ic.width * k), int(ic.height * k)), Image.LANCZOS)
-            img.alpha_composite(ic, (cx - ic.width // 2, cy - ic.height // 2))
-        if masc or (s.get("cta") and zh >= 200):
-            m = int(min(300, zh * 0.72)); mx = W - 80 - m; my = zbot - m
-            img.alpha_composite(mascote(m), (mx, my)); d = ImageDraw.Draw(img)
-            fala = s.get("fala")
-            if fala:
-                fl = font("Carlito-Bold.ttf", 36); ls = wrap(d, fala, fl, 330); bh = len(ls) * 44 + 36
+    if s.get("cta"):
+        ztop2 = y + 20; ph = int(min(H - 150 - ztop2, 470))
+        if ph >= 220:
+            pim = pose_img(pose_padrao(s, n, total), 420, ph)
+            mx = W - 70 - pim.width; my = H - 150 - pim.height
+            img.alpha_composite(pim, (mx, my))
+            d = ImageDraw.Draw(img)
+            if s.get("fala"):
+                fl = font("Carlito-Bold.ttf", 36); ls = wrap(d, s["fala"], fl, 330); bh = len(ls) * 44 + 36
                 bw = max(d.textlength(t, font=fl) for t in ls) + 48
-                bx1 = W - 70; bx0 = bx1 - bw; by1 = my + 14; by0 = by1 - bh
-                if by0 < ztop - 10: by0 = ztop - 10; by1 = by0 + bh
+                bx0 = 80; bx1 = bx0 + bw; by1 = H - 360; by0 = by1 - bh
                 d.rounded_rectangle([bx0, by0, bx1, by1], 26, fill=(255, 255, 255))
-                d.polygon([(bx1 - 90, by1 - 2), (bx1 - 40, by1 - 2), (mx + m * 0.62, my + m * 0.22)], fill=(255, 255, 255))
+                d.polygon([(bx0 + 50, by1 - 2), (bx0 + 100, by1 - 2), (bx0 + 70, by1 + 34)], fill=(255, 255, 255))
+                for i, t in enumerate(ls): d.text((bx0 + 24, by0 + 18 + i * 44), t, font=fl, fill=NAVY)
+    else:
+        zbot = H - 150; ztop = y + 30; zh = zbot - ztop
+        if zh >= 190:
+            d = ImageDraw.Draw(img)
+            pim = pose_img(pose_padrao(s, n, total), 430, int(min(zh, 470)))
+            mx = W - 70 - pim.width; my = zbot - pim.height
+            fala = s.get("fala"); fl = font("Carlito-Bold.ttf", 36); ls = wrap(d, fala, fl, 270) if fala else []
+            bh = len(ls) * 44 + 36; bw = (max(d.textlength(t, font=fl) for t in ls) + 48) if ls else 0
+            lado = False
+            if ls and (my - bh - 14) < ztop - 10:                    # sem espaço em cima do boneco
+                ph2 = zh - bh - 18
+                if ph2 >= 230:                                       # reduz o boneco para o balão caber em cima
+                    pim = pose_img(pose_padrao(s, n, total), 430, int(ph2)); mx = W - 70 - pim.width; my = zbot - pim.height
+                else: lado = True                                    # sem jeito: balão ao lado
+            dia = int(min(zh, 460))
+            if lado: dia = int(max(150, min(dia, mx - bw - 12 - 80 - 40)))
+            cx = 80 + dia // 2; cy = ztop + zh // 2
+            if s.get("icone"):
+                ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); od = ImageDraw.Draw(ov)
+                od.ellipse([cx - dia // 2, cy - dia // 2, cx + dia // 2, cy + dia // 2], fill=(255, 255, 255, 20), outline=(224, 165, 38, 140), width=4)
+                img = Image.alpha_composite(img, ov)
+                ic = render_icon(s["icone"]); k = min(dia * 0.74 / ic.width, dia * 0.74 / ic.height)
+                ic = ic.resize((int(ic.width * k), int(ic.height * k)), Image.LANCZOS)
+                img.alpha_composite(ic, (cx - ic.width // 2, cy - ic.height // 2))
+            img.alpha_composite(pim, (mx, my)); d = ImageDraw.Draw(img)
+            if ls:
+                if lado:
+                    bx1 = mx - 12; bx0 = bx1 - bw; by0 = my + 10; by1 = by0 + bh
+                    d.rounded_rectangle([bx0, by0, bx1, by1], 26, fill=(255, 255, 255))
+                    d.polygon([(bx1 - 2, by0 + 20), (bx1 - 2, by0 + 60), (bx1 + 30, by0 + 40)], fill=(255, 255, 255))
+                else:
+                    bx1 = W - 70; bx0 = bx1 - bw; by0 = max(ztop - 10, my - bh - 14); by1 = by0 + bh
+                    d.rounded_rectangle([bx0, by0, bx1, by1], 26, fill=(255, 255, 255))
+                    tx = min(max(mx + pim.width * 0.45, bx0 + 60), bx1 - 60)
+                    d.polygon([(tx - 25, by1 - 2), (tx + 25, by1 - 2), (tx + 10, by1 + 34)], fill=(255, 255, 255))
                 for i, t in enumerate(ls): d.text((bx0 + 24, by0 + 18 + i * 44), t, font=fl, fill=NAVY)
     d = ImageDraw.Draw(img)
     if s.get("cta"):
-        d.rounded_rectangle([80, H - 330, W - 80, H - 190], 36, fill=(34, 197, 94))
-        d.text((W // 2, H - 260), "Chame no WhatsApp: 21 99419-2878", font=font("Carlito-Bold.ttf", 50), fill=(8, 40, 20), anchor="mm")
+        d.rounded_rectangle([80, H - 330, 640, H - 190], 36, fill=(34, 197, 94))
+        d.text((360, H - 285), "Chame no WhatsApp", font=font("Carlito-Bold.ttf", 46), fill=(8, 40, 20), anchor="mm")
+        d.text((360, H - 235), "21 99419-2878", font=font("Carlito-Bold.ttf", 50), fill=(8, 40, 20), anchor="mm")
     d.line([80, H - 135, W - 80, H - 135], fill=(255, 255, 255, 60), width=2)
     d.text((80, H - 95), "AV  |  Eng. André Victor · CREA-RJ 2014128139", font=font("Carlito-Bold.ttf", 32), fill=GOLD)
     d.text((W - 80, H - 95), f"{n}/{total}" + ("  →" if n < total else ""), font=font("Carlito-Bold.ttf", 32), fill=WHITE, anchor="ra")
