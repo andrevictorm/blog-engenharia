@@ -105,12 +105,13 @@ P["2026-11-09-aep-nr17"] = dict(
  S("Checklist rápido","Sua empresa já fez isto?","1) Observou o trabalho real. 2) Ouviu os trabalhadores. 3) Registrou riscos e medidas. 4) Acompanha e revisa. Confira o texto vigente da norma.","aep"),
  S("Sua vez","Qual mito você já ouviu?","Comente 1, 2 ou 3 e salve este post para consultar depois. Precisa de apoio técnico? Fale comigo.",None,True)],
  caption="Ergonomia é só cadeira e mesa bonita? 🪑\n\nNão. Segundo o MTE, todas as empresas devem fazer ações de prevenção por meio da Avaliação Ergonômica Preliminar (AEP), dentro do GRO da NR-1, e não apenas escritórios. O MTE também esclarece que a NR-17 não define um modelo padronizado: a empresa escolhe a metodologia e o formato.\n\nO que sustenta uma AEP: observar o trabalho real, ouvir os trabalhadores, registrar riscos e medidas, acompanhar e revisar. Papel assinado sem análise do trabalho real não se sustenta.\n\n👉 Qual mito você já ouviu? Comente 1, 2 ou 3 e salve o post.\n\nApoio técnico: WhatsApp 21 99419-2878 (link na bio). Confira sempre o texto vigente da norma.\n\n#AEP #NR17 #Ergonomia #riodejaneiro #rj")
-os.makedirs(OUT, exist_ok=True)
-tmp = os.path.join(OUT, "_tmp.json")
-for slug, p in P.items():
-    json.dump({"slides": p["slides"]}, open(tmp, "w", encoding="utf-8"), ensure_ascii=False)
-    d = os.path.join(OUT, slug)
-    subprocess.run([sys.executable, os.path.join(HERE, "arte.py"), tmp, d], check=True)
-    assert len(p["caption"]) <= 1500, (slug, len(p["caption"]))
-    open(os.path.join(d, "legenda.txt"), "w", encoding="utf-8").write(p["caption"])
-os.remove(tmp)
+if __name__ == "__main__":
+  os.makedirs(OUT, exist_ok=True)
+  tmp = os.path.join(OUT, "_tmp.json")
+  for slug, p in P.items():
+      json.dump({"slides": p["slides"]}, open(tmp, "w", encoding="utf-8"), ensure_ascii=False)
+      d = os.path.join(OUT, slug)
+      subprocess.run([sys.executable, os.path.join(HERE, "arte.py"), tmp, d], check=True)
+      assert len(p["caption"]) <= 1500, (slug, len(p["caption"]))
+      open(os.path.join(d, "legenda.txt"), "w", encoding="utf-8").write(p["caption"])
+  os.remove(tmp)
